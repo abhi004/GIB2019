@@ -1,0 +1,35 @@
+{
+  "iisSettings": {
+    "windowsAuthentication": false,
+    "anonymousAuthentication": true,
+    "iisExpress": {
+      "applicationUrl": "http://localhost:49894",
+      "sslPort": 44391
+    }
+  },
+  "$schema": "http://json.schemastore.org/launchsettings.json",
+  "profiles": {
+    "IIS Express": {
+      "commandName": "IISExpress",
+      "launchBrowser": true,
+      "launchUrl": "api/values",
+      "environmentVariables": {
+        "CosmosDatabasepartitionsName": "contact",
+        "CosmosDatabaseName": "gib2019",
+        "CosmosDatabaseCollectionName": "contacts",
+        "CosmosDatabasAuthkey": "6ikdnbmAt3z7XdHWAOQDCxWADa3fuDFQKZmD5eOqqjDS9hdiqJQ9iCwJLqAUX35b7SrddXR43wMGofs5Zhnm4w==",
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "CosmosGraphHostName": "https://gib2019.gremlin.cosmos.azure.com"
+      }
+    },
+    "GremlinAPI": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "launchUrl": "api/values",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "https://localhost:5001;http://localhost:5000"
+    }
+  }
+}
