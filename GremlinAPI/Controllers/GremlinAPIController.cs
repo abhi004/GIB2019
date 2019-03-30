@@ -22,8 +22,8 @@ namespace GremlinAPI.Controllers
             Configuration obj = new Configuration();
 
         }   
-        private static Lazy<GremlinClient> lazyClient = new Lazy<GremlinClient>(Configuration.InitializeGremlinClient);
-        private static GremlinClient _client => lazyClient.Value;
+        //private static Lazy<GremlinClient> lazyClient = new Lazy<GremlinClient>(Configuration.InitializeGremlinClient);
+        //private static GremlinClient _client => lazyClient.Value;
 
         [HttpPost]
         [ActionName("CreateContact")]
@@ -44,8 +44,14 @@ namespace GremlinAPI.Controllers
                     string query = $".property('{property.Name.ToLower()}','{property.GetValue(contact, null)}')";
                     builder.Append(query);
                 }
+
                 var queryString = string.Concat($"g.addV('contact')", builder, $".property('{partition}','users').property('name','{contact.FirstName}')");
-                result = await _client.SubmitAsync<dynamic>(queryString);
+                using (var _client = Configuration.InitializeGremlinClient())
+                {
+                    result = await _client.SubmitAsync<dynamic>(queryString);
+                }
+
+               // result = await _client.SubmitAsync<dynamic>(queryString);
 
                 var responsemessage = JsonConvert.SerializeObject(result);
                 var response = JsonConvert.DeserializeObject<List<Contact>>(responsemessage);
@@ -85,7 +91,10 @@ namespace GremlinAPI.Controllers
 
                 }
                 var queryString = string.Concat($"g.V('{contact.Id}')", builder, $".property('name','{contact.FirstName}')");
-                result = await _client.SubmitAsync<dynamic>(queryString);
+                using (var _client = Configuration.InitializeGremlinClient())
+                {
+                    result = await _client.SubmitAsync<dynamic>(queryString);
+                }
 
                 var responsemessage = JsonConvert.SerializeObject(result);
                 var response = JsonConvert.DeserializeObject<List<Contact>>(responsemessage);
@@ -111,8 +120,10 @@ namespace GremlinAPI.Controllers
                 string partition = Configuration.CosmosDatabasepartitionsName;
 
                 string query = $"g.V('{Nodeid}').has('{partition}','users')";
-
-                result = await _client.SubmitAsync<dynamic>(query);
+                using (var _client = Configuration.InitializeGremlinClient())
+                {
+                    result = await _client.SubmitAsync<dynamic>(query);
+                }
                 var responsemessage = JsonConvert.SerializeObject(result);
                 var response = JsonConvert.DeserializeObject<List<Contact>>(responsemessage);
 
@@ -136,7 +147,11 @@ namespace GremlinAPI.Controllers
 
                 string query = $"g.V('{Nodeid}').Drop()";
 
-                result = await _client.SubmitAsync<dynamic>(query);
+                using (var _client = Configuration.InitializeGremlinClient())
+                {
+                    result = await _client.SubmitAsync<dynamic>(query);
+                }
+
                 var responsemessage = JsonConvert.SerializeObject(result);
                 var response = JsonConvert.DeserializeObject<List<Contact>>(responsemessage);
 
@@ -160,7 +175,10 @@ namespace GremlinAPI.Controllers
                 foreach (var item in NodeProperty)
                 {
                     string querystring = $"g.V('{item.SourceNode}').addE('{item.EnumConstant}').to(g.V('{item.DestinationNode}'))";
-                    result = await _client.SubmitAsync<dynamic>(querystring);
+                    using (var _client = Configuration.InitializeGremlinClient())
+                    {
+                        result = await _client.SubmitAsync<dynamic>(querystring);
+                    }
 
                 }
                 var responsemessage = JsonConvert.SerializeObject(result);
